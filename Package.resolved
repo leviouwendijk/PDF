@@ -1,0 +1,78 @@
+{
+  "originHash" : "dbf91dfac127ea0338c17bc09b0b9faa110c2553fc2dadc06c0ada7dc20cab5a",
+  "pins" : [
+    {
+      "identity" : "atomos",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Atomos.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "5ffdb160c4913e02214020eb75ac620900cf2914"
+      }
+    },
+    {
+      "identity" : "filetypes",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/FileTypes.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "f0c1d8bf5beda0de51c9e95b687fbdec9e4ce7b0"
+      }
+    },
+    {
+      "identity" : "io",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/IO.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "5e88720439dc8f782034b6f9f8374c61ef1707f0"
+      }
+    },
+    {
+      "identity" : "position",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Position.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "6c06f1b941553030a1992479783bc24b457aaccc"
+      }
+    },
+    {
+      "identity" : "primitives",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Primitives.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "2a1996970e4549ab110ffa72f654560a72ad2ca7"
+      }
+    },
+    {
+      "identity" : "readers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Readers.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e9b967413538320ef2cae3bcecfc2edc6f11933b"
+      }
+    },
+    {
+      "identity" : "schema",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Schema.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "a3b2d62e52cb7e061d5a5cdadb63f4d31684dd4d"
+      }
+    },
+    {
+      "identity" : "testing",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Testing.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "105eecb68c3db99119dff3afeb846b7923abbc85"
+      }
+    }
+  ],
+  "version" : 3
+}
