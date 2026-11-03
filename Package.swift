@@ -12,12 +12,14 @@ let package = Package(
         .library(name: "PDFCore", targets: ["PDFCore"]),
         .library(name: "PDFApple", targets: ["PDFApple"]),
         .executable(name: "t_pdf", targets: ["PDFTests"]),
+        .executable(name: "t_pdf_fixtures", targets: ["PDFFixtureTests"]),
     ],
     dependencies: [
         .package(url: "https://github.com/leviouwendijk/Primitives.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/Position.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/IO.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/Readers.git", branch: "master"),
+        .package(url: "https://github.com/leviouwendijk/Milieu.git", branch: "master"),
     ],
     targets: [
         .target(
@@ -51,6 +53,14 @@ let package = Package(
                 .product(name: "IO", package: "IO"),
             ],
             path: "Testing/PDFTests"
+        ),
+        .executableTarget(
+            name: "PDFFixtureTests",
+            dependencies: [
+                "PDF", "PDFCore",
+                .product(name: "Milieu", package: "Milieu"),
+            ],
+            path: "Testing/PDFFixtureTests"
         ),
     ],
     swiftLanguageModes: [.v6]

@@ -1,6 +1,15 @@
 {
-  "originHash" : "dbf91dfac127ea0338c17bc09b0b9faa110c2553fc2dadc06c0ada7dc20cab5a",
+  "originHash" : "3c6e4b056db90d702815f4085c990b4283d7ac4d65d1614bc98d2e3c91399673",
   "pins" : [
+    {
+      "identity" : "arguments",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Arguments.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "bb9985bc8225bc5300997ce6378d16ad37f92989"
+      }
+    },
     {
       "identity" : "atomos",
       "kind" : "remoteSourceControl",
@@ -26,6 +35,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "5e88720439dc8f782034b6f9f8374c61ef1707f0"
+      }
+    },
+    {
+      "identity" : "milieu",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Milieu.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "5b6211d7b2207c8b999012584c48a33f25f15668"
       }
     },
     {
@@ -71,6 +89,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "105eecb68c3db99119dff3afeb846b7923abbc85"
+      }
+    },
+    {
+      "identity" : "variables",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Variables.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "3e118cecca53a964099a0afe495e53fe9b325ff0"
       }
     }
   ],
