@@ -11,6 +11,8 @@ let package = Package(
         .library(name: "PDF", targets: ["PDF"]),
         .library(name: "PDFCore", targets: ["PDFCore"]),
         .library(name: "PDFApple", targets: ["PDFApple"]),
+
+        // testing
         .executable(name: "t_pdf", targets: ["PDFTests"]),
         .executable(name: "t_pdf_fixtures", targets: ["PDFFixtureTests"]),
     ],
@@ -19,6 +21,8 @@ let package = Package(
         .package(url: "https://github.com/leviouwendijk/Position.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/IO.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/Readers.git", branch: "master"),
+
+        // for test fixtures
         .package(url: "https://github.com/leviouwendijk/Milieu.git", branch: "master"),
     ],
     targets: [
@@ -57,7 +61,7 @@ let package = Package(
         .executableTarget(
             name: "PDFFixtureTests",
             dependencies: [
-                "PDF", "PDFCore",
+                "PDF", "PDFCore", "PDFApple",
                 .product(name: "Milieu", package: "Milieu"),
             ],
             path: "Testing/PDFFixtureTests"

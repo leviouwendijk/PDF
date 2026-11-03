@@ -2,11 +2,13 @@ import Foundation
 import Milieu
 import PDF
 import PDFCore
+import PDFApple
 
 private enum FixtureFailure: Error {
     case invalid_root(String)
     case no_pdfs(String)
     case unknown_selection(String)
+    case unknown_option(String)
     case read_failed(String, String)
     case invalid_document(String)
     case invalid_line(String, Int, String)
@@ -40,7 +42,15 @@ struct PDFFixtureTests {
         }
 
         let available = try discoverPDFs(in: root)
-        let requested = Array(CommandLine.arguments.dropFirst())
+        let arguments = Array(CommandLine.arguments.dropFirst())
+        let flags = arguments.filter { $0.hasPrefix("--") }
+        let acceptedFlags = Set(["--print-lines", "--print-native-lines", "--print-vision-lines"])
+        if let unknown = flags.first(where: { !acceptedFlags.contains($0) }) {
+            throw FixtureFailure.unknown_option(unknown)
+        }
+        let printNative = flags.contains("--print-lines") || flags.contains("--print-native-lines")
+        let printVision = flags.contains("--print-lines") || flags.contains("--print-vision-lines")
+        let requested = arguments.filter { !$0.hasPrefix("--") }
         let selected = try selectFixtures(from: available, requested: requested)
 
         var totalPages = 0
@@ -50,7 +60,7 @@ struct PDFFixtureTests {
         var totalTextWithoutLines = 0
 
         for fixture in selected {
-            let metrics = try inspect(fixture)
+            let metrics = try inspect(fixture, printNativeLines: printNative, printVisionLines: printVision)
             totalPages += metrics.pages
             totalNativeTextPages += metrics.nativeTextPages
             totalNativeLines += metrics.nativeLines
@@ -126,10 +136,14 @@ struct PDFFixtureTests {
         }
     }
 
-    private static func inspect(_ fixture: Fixture) throws -> Metrics {
+    private static func inspect(
+        _ fixture: Fixture,
+        printNativeLines: Bool,
+        printVisionLines: Bool
+    ) throws -> Metrics {
         let document: PDFDocumentSnapshot
         do {
-            document = try PDFReader.read(fixture.url)
+            document = try PDFReader.read(fixture.url, recognition: printVisionLines ? .vision : .none)
         } catch {
             throw FixtureFailure.read_failed(fixture.relativePath, String(describing: error))
         }
@@ -147,8 +161,10 @@ struct PDFFixtureTests {
 
         for page in document.pages {
             let lines = document.nodes(onPage: page.index, kind: .line)
-            let hasNativeText = page.textSnapshots.contains {
-                !$0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                .filter { $0.value.origin == .native }
+            let hasNativeText = page.textSnapshots.contains { snapshot in
+                snapshot.source == .native &&
+                    !snapshot.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             }
             if hasNativeText {
                 nativeTextPages += 1
@@ -159,18 +175,18 @@ struct PDFFixtureTests {
             nativeLines += lines.count
 
             let children = document.children(of: "page:\(page.index)")
-            guard children.filter({ $0.value.kind == .line }).count == lines.count else {
+            guard children.filter({ $0.value.kind == .line && $0.value.origin == .native }).count == lines.count else {
                 throw FixtureFailure.invalid_line(fixture.relativePath, page.index, "containment")
             }
 
             let follows = document.graph.edges.filter {
-                $0.value == .follows && $0.source.hasPrefix("page:\(page.index)/")
+                $0.value == .follows && $0.source.hasPrefix("page:\(page.index)/line:")
             }
             guard follows.count == max(0, lines.count - 1) else {
                 throw FixtureFailure.invalid_line(fixture.relativePath, page.index, "line sequence")
             }
 
-            for line in lines {
+            for (ordinal, line) in lines.enumerated() {
                 var textReference: PDFTextReference?
                 var region: PDFPageRegion?
                 for anchor in line.value.anchors {
@@ -190,6 +206,48 @@ struct PDFFixtureTests {
                 guard resolvedText == line.value.text,
                       document.nodes(overlapping: region, kind: .line).contains(where: { $0.id == line.id }) else {
                     throw FixtureFailure.invalid_line(fixture.relativePath, page.index, "source text or geometry")
+                }
+                if printNativeLines {
+                    let content = resolvedText.replacingOccurrences(of: "\n", with: "\\n")
+                    print("native page=\(page.index + 1) line=\(ordinal + 1): \(content)")
+                }
+            }
+            if printVisionLines {
+                guard let snapshot = page.textSnapshots.first(where: { $0.id == "vision" }),
+                      snapshot.source == .recognized else {
+                    throw FixtureFailure.invalid_document(fixture.relativePath)
+                }
+                let recognizedLines = document.nodes(onPage: page.index, kind: .line)
+                    .filter { $0.value.origin == .recognition }
+                let assembledText = recognizedLines.compactMap { $0.value.text }.joined(separator: "\n")
+                guard snapshot.text == assembledText else {
+                    throw FixtureFailure.invalid_line(fixture.relativePath, page.index, "OCR text assembly")
+                }
+                let recognizedFollows = document.graph.edges.filter {
+                    $0.value == .follows && $0.source.hasPrefix("page:\(page.index)/vision/line:")
+                }
+                guard recognizedFollows.count == max(0, recognizedLines.count - 1) else {
+                    throw FixtureFailure.invalid_line(fixture.relativePath, page.index, "OCR sequence")
+                }
+                for (ordinal, line) in recognizedLines.enumerated() {
+                    let reference = line.value.anchors.compactMap { anchor -> PDFTextReference? in
+                        guard case .text(let reference) = anchor else { return nil }
+                        return reference
+                    }.first
+                    let region = line.value.anchors.compactMap { anchor -> PDFPageRegion? in
+                        guard case .region(let region) = anchor else { return nil }
+                        return region
+                    }.first
+                    guard let reference, let region,
+                          reference.snapshotID == snapshot.id,
+                          region.pageIndex == page.index,
+                          try document.resolve(reference) == line.value.text,
+                          let confidence = line.value.confidence,
+                          document.nodes(overlapping: region, kind: .line).contains(where: { $0.id == line.id }) else {
+                        throw FixtureFailure.invalid_line(fixture.relativePath, page.index, "OCR evidence anchors")
+                    }
+                    let content = (line.value.text ?? "").replacingOccurrences(of: "\n", with: "\\n")
+                    print("vision page=\(page.index + 1) line=\(ordinal + 1) confidence=\(String(format: "%.3f", confidence)): \(content)")
                 }
             }
         }
