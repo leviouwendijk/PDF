@@ -21,6 +21,7 @@ let package = Package(
         .package(url: "https://github.com/leviouwendijk/Position.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/IO.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/Readers.git", branch: "master"),
+        .package(url: "https://github.com/leviouwendijk/Schema.git", branch: "master"),
 
         // for test fixtures
         .package(url: "https://github.com/leviouwendijk/Milieu.git", branch: "master"),
@@ -32,6 +33,7 @@ let package = Package(
                 .product(name: "Primitives", package: "Primitives"),
                 .product(name: "Position", package: "Position"),
                 .product(name: "IO", package: "IO"),
+                .product(name: "Schema", package: "Schema"),
             ]
         ),
         .target(
@@ -55,6 +57,7 @@ let package = Package(
                 .product(name: "Primitives", package: "Primitives"),
                 .product(name: "Position", package: "Position"),
                 .product(name: "IO", package: "IO"),
+                .product(name: "Schema", package: "Schema"),
             ],
             path: "Testing/PDFTests"
         ),

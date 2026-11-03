@@ -7,6 +7,7 @@ import Primitives
 import PDFCore
 import PDFApple
 import PDF
+import Schema
 
 private enum TestFailure: Error {
     case unexpected_result(String)
@@ -17,6 +18,7 @@ private enum TestFailure: Error {
 struct PDFTests {
     static func main() throws {
         try testModelInvariants()
+        try testLineObservationAndSchema()
         try testNativePDFNavigation()
         try testIntegratedVision()
         print("t_pdf: passed")
@@ -75,6 +77,44 @@ struct PDFTests {
             _ = try PDFNativeReader().read(Data())
             throw TestFailure.unexpected_result("invalid PDF accepted")
         } catch PDFReadError.invalid_document {}
+    }
+
+    private static func testLineObservationAndSchema() throws {
+        let document = try PDFReader.read(makePDFDocument())
+        let original = document.nodes(onPage: 0, kind: .line)
+        let lines = document.lines(onPage: 0)
+        guard !lines.isEmpty, lines.count == original.count else {
+            throw TestFailure.unexpected_result("line observation count")
+        }
+        for (line, node) in zip(lines, original) {
+            guard line.id == node.id,
+                  line.text == node.value.text,
+                  line.origin == node.value.origin,
+                  let reference = line.textReferences.first,
+                  try document.resolve(reference) == line.text,
+                  line.regions.first?.pageIndex == 0 else {
+                throw TestFailure.unexpected_result("line observation provenance")
+            }
+        }
+
+        let pageRegion = try PDFPageRegion(
+            pageIndex: 0,
+            rectangle: PDFRectangle(x: 0, y: 0, width: 612, height: 792)
+        )
+        guard document.lines(overlapping: pageRegion) == lines,
+              document.lines(onPage: 2).isEmpty else {
+            throw TestFailure.unexpected_result("line observation queries")
+        }
+
+        let data = try JSONEncoder().encode(lines[0])
+        let json = try JSONDecoder().decode(JSONValue.self, from: data)
+        try PDFLineObservation.jsonschema.validate(json)
+        let referenceData = try JSONEncoder().encode(lines[0].textReferences[0])
+        let referenceJSON = try JSONDecoder().decode(JSONValue.self, from: referenceData)
+        try PDFTextReference.jsonschema.validate(referenceJSON)
+        let regionData = try JSONEncoder().encode(pageRegion)
+        let regionJSON = try JSONDecoder().decode(JSONValue.self, from: regionData)
+        try PDFPageRegion.jsonschema.validate(regionJSON)
     }
 
     private static func testNativePDFNavigation() throws {
@@ -159,6 +199,11 @@ struct PDFTests {
                 .filter { $0.value.origin == .native }.map(\.id)
             guard preservedLineIDs == originalLineIDs else {
                 throw TestFailure.unexpected_result("native line preservation")
+            }
+            let observations = integrated.lines(onPage: page.index)
+            guard observations.count == integrated.nodes(onPage: page.index, kind: .line).count,
+                  observations.filter({ $0.origin == .native }).count == originalLineIDs.count else {
+                throw TestFailure.unexpected_result("integrated line observations")
             }
             let visionLines = integrated.nodes(onPage: page.index, kind: .line)
                 .filter { $0.value.origin == .recognition }

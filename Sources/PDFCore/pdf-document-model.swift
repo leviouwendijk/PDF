@@ -33,7 +33,7 @@ public struct PDFSource: Sendable, Hashable {
 }
 
 /// Coordinates in the PDF page's unnormalized PDFKit page space.
-public struct PDFRectangle: Sendable, Hashable {
+public struct PDFRectangle: Sendable, Hashable, Encodable {
     public let x: Double
     public let y: Double
     public let width: Double
@@ -49,7 +49,7 @@ public struct PDFRectangle: Sendable, Hashable {
     }
 }
 
-public struct PDFPageRegion: Sendable, Hashable {
+public struct PDFPageRegion: Sendable, Hashable, Encodable {
     public let pageIndex: Int
     public let rectangle: PDFRectangle
 
@@ -97,7 +97,7 @@ public struct PDFPageRecord: Sendable, Hashable {
 }
 
 /// UTF-16 offsets match PDFKit's NSRange units, not Unicode character indices.
-public struct PDFTextReference: Sendable, Hashable {
+public struct PDFTextReference: Sendable, Hashable, Encodable {
     public let pageIndex: Int
     public let snapshotID: String
     public let snapshotFingerprint: ContentFingerprint
@@ -136,7 +136,7 @@ public enum PDFElementKind: String, Sendable {
     case field
 }
 
-public enum PDFElementOrigin: String, Sendable {
+public enum PDFElementOrigin: String, Sendable, CaseIterable, Encodable {
     case native
     case recognition
     case reconstruction
