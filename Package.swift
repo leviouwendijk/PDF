@@ -11,10 +11,6 @@ let package = Package(
         .library(name: "PDF", targets: ["PDF"]),
         .library(name: "PDFCore", targets: ["PDFCore"]),
         .library(name: "PDFApple", targets: ["PDFApple"]),
-
-        // testing
-        .executable(name: "t_pdf", targets: ["PDFTests"]),
-        .executable(name: "t_pdf_fixtures", targets: ["PDFFixtureTests"]),
     ],
     dependencies: [
         .package(url: "https://github.com/leviouwendijk/Primitives.git", branch: "master"),
@@ -22,9 +18,6 @@ let package = Package(
         .package(url: "https://github.com/leviouwendijk/IO.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/Readers.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/Schema.git", branch: "master"),
-
-        // for test fixtures
-        .package(url: "https://github.com/leviouwendijk/Milieu.git", branch: "master"),
     ],
     targets: [
         .target(
@@ -49,25 +42,6 @@ let package = Package(
         .target(
             name: "PDF",
             dependencies: ["PDFCore", "PDFApple"]
-        ),
-        .executableTarget(
-            name: "PDFTests",
-            dependencies: [
-                "PDF", "PDFCore", "PDFApple",
-                .product(name: "Primitives", package: "Primitives"),
-                .product(name: "Position", package: "Position"),
-                .product(name: "IO", package: "IO"),
-                .product(name: "Schema", package: "Schema"),
-            ],
-            path: "Testing/PDFTests"
-        ),
-        .executableTarget(
-            name: "PDFFixtureTests",
-            dependencies: [
-                "PDF", "PDFCore", "PDFApple",
-                .product(name: "Milieu", package: "Milieu"),
-            ],
-            path: "Testing/PDFFixtureTests"
         ),
     ],
     swiftLanguageModes: [.v6]

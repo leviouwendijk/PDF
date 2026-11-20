@@ -13,3 +13,5 @@ xcuserdata/
 compiled.pkl
 /compiled.pkl
 **/compiled.pkl
+**/.testflows/*
+!**/.testflows/snapshots/
