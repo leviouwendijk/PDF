@@ -1,3 +1,3 @@
 import Executable;
 
-let tests: Tests = .{ .primary = "t_pdf" };
+let tests: Tests = .{ .primary = "t_pdf", .live = ["t_pdf_fixtures"] };
