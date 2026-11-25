@@ -14,13 +14,13 @@ let package = Package(
         .executable(name: "t_pdf_fixtures", targets: ["PDFFixtureTests"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/leviouwendijk/Primitives.git", branch: "master"),
-        .package(url: "https://github.com/leviouwendijk/Position.git", branch: "master"),
-        .package(url: "https://github.com/leviouwendijk/IO.git", branch: "master"),
-        .package(url: "https://github.com/leviouwendijk/Schema.git", branch: "master"),
+        .package(url: "https://github.com/swift-lco/Primitives.git", branch: "master"),
+        .package(url: "https://github.com/swift-lco/Position.git", branch: "master"),
+        .package(url: "https://github.com/swift-lco/IO.git", branch: "master"),
+        .package(url: "https://github.com/swift-lco/Schema.git", branch: "master"),
 
         // for test fixtures
-        .package(url: "https://github.com/leviouwendijk/Milieu.git", branch: "master"),
+        .package(url: "https://github.com/swift-lco/Milieu.git", branch: "master"),
         .package(path: ".."),
     ],
     targets: [

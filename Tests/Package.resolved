@@ -1,0 +1,96 @@
+{
+  "originHash" : "6511e28dc44d6c0b45ada98943c77f61ae3f464a8378ddce8e7f98edfab2e61e",
+  "pins" : [
+    {
+      "identity" : "arguments",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-lco/Arguments.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "2bbd1184eb89d4c34e7d5be64417332b53d9764c"
+      }
+    },
+    {
+      "identity" : "atomos",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-lco/Atomos.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "d82fd2ccb56f9fafbb079435c4d70ff5207bfe8c"
+      }
+    },
+    {
+      "identity" : "filetypes",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-lco/FileTypes.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "315d095312091e4c089e60b24fa02df73d337531"
+      }
+    },
+    {
+      "identity" : "io",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-lco/IO.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e7b8b41721cad2458d8bbd01f8d4a5f38dcd44ef"
+      }
+    },
+    {
+      "identity" : "milieu",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-lco/Milieu.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "4ab76378aef515d2dfc72ff52f284cde31cb6a38"
+      }
+    },
+    {
+      "identity" : "position",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-lco/Position.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "d9805b35c346369ef656e645902ad0cbe740c17d"
+      }
+    },
+    {
+      "identity" : "primitives",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-lco/Primitives.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "0c185c7cd2a829a47518a5134648b3cffc085b2a"
+      }
+    },
+    {
+      "identity" : "readers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-lco/Readers.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e7d3b31a5bed16a83432fa6864c24248fdc925c4"
+      }
+    },
+    {
+      "identity" : "schema",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-lco/Schema.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e45634af56b8f5ffe8a12a2922675e713dc38190"
+      }
+    },
+    {
+      "identity" : "variables",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-lco/Variables.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "95453b16be757958a8f295cc93f1f28d2123636b"
+      }
+    }
+  ],
+  "version" : 3
+}
